@@ -1,0 +1,221 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Tests</title>
+		<link rel="shortcut icon" type="image/png" href="jasmine/lib/jasmine-2.2.0/jasmine_favicon.png">
+		<link rel="stylesheet" type="text/css" href="jasmine/lib/jasmine-2.2.0/jasmine.css"> 
+		<script type="text/javascript" src="jasmine/lib/jasmine-2.2.0/jasmine.js"></script>
+		<script type="text/javascript" src="jasmine/lib/jasmine-2.2.0/jasmine-html.js"></script>
+		<script type="text/javascript" src="jasmine/lib/jasmine-2.2.0/boot.js"></script>
+
+		<script type="text/javascript" src="../tictactoe.js"></script>
+
+		<script>
+
+			describe("tictactoe", function() {
+
+				it("is not null", function() {
+					expect(tictactoe).not.toBe(null);
+				});
+
+			});
+
+			describe("tictactoe.newGame", function() {
+
+				it("choose should be defined", function() {
+					expect(tictactoe.newGame).not.toBeUndefined();
+				});
+
+				it("should be a function", function() {
+					expect(typeof tictactoe.newGame).toEqual("function");
+				});
+
+			});
+
+			describe("tictactoe game", function() {
+
+				describe("should return results object", function() {
+
+					var game;
+
+					beforeEach(function() {
+						game = tictactoe.newGame();
+					});
+
+					it("should not be null", function() {
+						expect(game).not.toBeUndefined();
+					});
+
+					it("should have a getStatus function", function() {
+						expect(typeof game.getStatus).toEqual("function");
+					});
+
+					it("should have a getWinner function", function() {
+						expect(typeof game.getWinner).toEqual("function");
+					});
+
+					it("should have a getMessage function", function() {
+						expect(typeof game.getMessage).toEqual("function");
+					});
+
+					it("should have a getCurrentUser function", function() {
+						expect(typeof game.getCurrentUser).toEqual("function");
+					});
+
+					it("should have a getLastUser function", function() {
+						expect(typeof game.getLastUser).toEqual("function");
+					});
+
+					it("should have a getWinningSequence function", function() {
+						expect(typeof game.getWinningSequence).toEqual("function");
+					});
+
+					it("should have a choose function", function() {
+						expect(typeof game.choose).toEqual("function");
+					});
+
+				});
+
+				describe("newUser should return x", function() {
+
+					it("getCurrentUser should return 'x'", function() {
+						var game = tictactoe.newGame();
+						expect(game.getCurrentUser()).toEqual("x");
+					});
+
+				});
+
+				describe("initialized user newUser should return o", function() {
+
+					it("getCurrentUser should return 'o'", function() {
+						var game = tictactoe.newGame("o");
+						expect(game.getCurrentUser()).toEqual("o");
+					});
+
+				});
+
+				describe("winning sequences", function() {
+
+					// x x x
+					// - - -
+					// - - -
+					it("one, two, and three should win", function() {
+						var game = tictactoe.newGame();
+						game.choose(0); //x
+						game.choose(4); //o
+						game.choose(1); //x
+						game.choose(5); //o
+						game.choose(2); //x
+						expect(game.getWinner()).toEqual("x");
+						expect(game.getStatus()).toEqual(true);
+					});
+
+					// - - -
+					// x x x
+					// - - -
+					it("four, five, and six should win", function() {
+						var game = tictactoe.newGame();
+						game.choose(3); //x
+						game.choose(2); //o
+						game.choose(4); //x
+						game.choose(6); //o
+						game.choose(5); //x
+						expect(game.getWinner()).toEqual("x");
+						expect(game.getStatus()).toEqual(true);
+					});
+
+					// - - -
+					// - - -
+					// x x x
+					it("seven, eight, and nine should win", function() {
+						var game = tictactoe.newGame();
+						game.choose(6); //x
+						game.choose(2); //o
+						game.choose(7); //x
+						game.choose(3); //o
+						game.choose(8); //x
+						expect(game.getWinner()).toEqual("x");
+						expect(game.getStatus()).toEqual(true);
+					});
+
+					// x - -
+					// x - -
+					// x - -
+					it("one, four, and seven should win", function() {
+						var game = tictactoe.newGame();
+						game.choose(0); //x
+						game.choose(2); //o
+						game.choose(3); //x
+						game.choose(5); //o
+						game.choose(6); //x
+						expect(game.getWinner()).toEqual("x");
+						expect(game.getStatus()).toEqual(true);
+					});
+
+					// - x -
+					// - x -
+					// - x -
+					it("two, five, and eight should win", function() {
+						var game = tictactoe.newGame();
+						game.choose(2); //x
+						game.choose(3); //o
+						game.choose(4); //x
+						game.choose(5); //o
+						game.choose(6); //x
+						expect(game.getWinner()).toEqual("x");
+						expect(game.getStatus()).toEqual(true);
+					});
+
+					// - - x
+					// - - x
+					// - - x
+					it("three, six, and nine should win", function() {
+						var game = tictactoe.newGame();
+						game.choose(2); //x
+						game.choose(3); //o
+						game.choose(5); //x
+						game.choose(4); //o
+						game.choose(8); //x
+						expect(game.getWinner()).toEqual("x");
+						expect(game.getStatus()).toEqual(true);
+					});
+
+					// x - -
+					// - x -
+					// - - x
+					it("one, five, and nine should win", function() {
+						var game = tictactoe.newGame();
+						game.choose(0); //x
+						game.choose(2); //o
+						game.choose(4); //x
+						game.choose(5); //o
+						game.choose(8); //x
+						expect(game.getWinner()).toEqual("x");
+						expect(game.getStatus()).toEqual(true);
+					});
+
+					// - - x
+					// - x -
+					// x - -
+					it("three, five, and seven should win", function() {
+						var game = tictactoe.newGame();
+						game.choose(2); //x
+						game.choose(3); //o
+						game.choose(4); //x
+						game.choose(5); //o
+						game.choose(6); //x
+						expect(game.getWinner()).toEqual("x");
+						expect(game.getStatus()).toEqual(true);
+					});
+
+				});
+
+			});
+
+		</script>
+
+	</head>
+	<body>
+		
+	</body>
+</html>

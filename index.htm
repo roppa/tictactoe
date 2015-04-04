@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Tic-Tac-Toe</title>
+		<meta charset="utf-8">
+		<style>
+			body {
+				margin: 0 auto;
+				width: 612px;
+				font: 16px/1.5 'Raleway', Helvetica, Helvetica Neue, Arial, sans-serif;
+			}
+			h1 {
+				text-align: center;
+			}
+			#squares {
+				overflow: hidden;
+			}
+			#new_game {
+				display: none;
+			}
+		    .square {
+		        background-color: lightblue;
+		        cursor: pointer;
+		        width: 200px;
+		        height: 200px;
+		        line-height: 200px;
+		        text-align: center;
+		        font-size: 80px;
+		        float: left;
+		        margin: 0 3px 3px 0;
+		    }
+		    .square p {
+		        text-align: center;
+		        -webkit-user-select: none;
+		        -moz-user-select: none;
+		        -ms-user-select: none;
+		        user-select: none;
+		    }
+		    .square:nth-child(3n+4) {
+		    	clear: left;
+		    }
+		    .square.win {
+		    	background-color: rgb(159, 237, 159);
+		    }
+		    #status, #new_game {
+		    	text-align: center;
+		    	margin: 20px auto;
+		    }
+		</style>
+		<script src="tictactoe.js"></script>
+		<script>
+
+			//don't polute the global namespace
+			//(function () {
+
+				var game = tictactoe.newGame();
+
+				//A class for square
+				function Square(id) {
+				    this.id = id - 1;
+				}
+
+				//create display method
+				Square.prototype.display = function(parent) {
+			        var el = document.createElement("div");
+			        el.setAttribute("id", this.id);
+			        el.setAttribute("class", "square");
+			        parent.insertBefore(el, parent.firstChild);
+			    };
+
+			    //create some anonymous instances. Ooh look, a bit more recursion
+				function createSquares(n, parent) {
+				    if (n === 0) {
+				        return;
+				    }
+				    //create new square and call display method
+				    new Square(n).display(parent);
+				    //recursion
+				    createSquares(n - 1, parent);
+				}
+
+				//lets set things up
+				window.onload = function() {
+
+					//create layout with 9 squares. 
+				    createSquares(9, document.getElementById("squares"));
+
+				    //event delegation
+				    document.getElementById("squares").addEventListener("click", function (e) {
+				    	if (game.getStatus() === null) {
+					    	if (e.target && e.target.className === "square") {
+					    		game.choose(+e.target.id); //note the shorthand type cast
+					    		e.target.innerText = game.getLastUser();
+					    		document.getElementById("status").innerHTML = game.getMessage();
+					    		if (game.getStatus() !== null) {
+							    	document.getElementById("new_game").style.display = "block";
+							    	if (game.getWinningSequence() !== null) {
+							    		game.getWinningSequence().forEach(function(id) {
+							    			document.getElementById(id).classList.add("win");
+							    		});
+							    	}
+							    }   
+					    	}
+					    }
+				    });
+
+					document.getElementById("new_game").addEventListener("click", function (e) {
+						var squares, i;
+						//clear variables
+						tictactoe.newGame();
+						//hide button
+						e.target.style.display = "none";
+						//reset message
+						document.getElementById("status").innerHTML = "";
+						//reset squares
+						squares = document.querySelectorAll(".square");
+						for (i = 0;i < squares.length;i++) {
+							squares[i].innerText = "";
+							squares[i].classList.remove("win");
+						}
+						return false;
+					});
+
+				};
+
+			//}());
+
+		</script>
+
+	</head>
+	<body>
+		<h1>Tic-Tac-Toe</h1>
+		<section id="squares"></section>
+		<p id="status"></p>
+		<button id="new_game">Play again</button>
+	</body>
+</html>
